@@ -53,7 +53,7 @@ func (c *GovCN) HighRisk() []Risk {
 			City:       v.City,
 			County:     v.County,
 			AreaName:   v.AreaName,
-			communitys: v.Communitys,
+			Communitys: v.Communitys,
 		}
 		risks = append(risks, r)
 	}
@@ -75,7 +75,7 @@ func (c *GovCN) MiddleRisk() []Risk {
 			City:       v.City,
 			County:     v.County,
 			AreaName:   v.AreaName,
-			communitys: v.Communitys,
+			Communitys: v.Communitys,
 		}
 		risks = append(risks, r)
 	}
@@ -107,7 +107,7 @@ func (c *GovCN) request() (Result, error) {
 	if err != nil {
 		return r, err
 	}
-	err = json.Unmarshal([]byte(body), &r)
+	err = json.Unmarshal(body, &r)
 	if err != nil {
 		return r, err
 	}

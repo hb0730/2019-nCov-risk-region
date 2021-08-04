@@ -12,7 +12,7 @@ type Risk struct {
 	City       string   `json:"city,omitempty"`
 	County     string   `json:"county,omitempty"`
 	AreaName   string   `json:"area_name,omitempty"`
-	communitys []string `json:"communitys,omitempty"`
+	Communitys []string `json:"communitys"`
 }
 
 var Instance = NewInstanceC()

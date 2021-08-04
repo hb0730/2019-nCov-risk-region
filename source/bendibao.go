@@ -6,21 +6,27 @@ import (
 )
 
 type BenDiBao struct {
-	browser *rod.Browser
+	Headless bool
+	browser  *rod.Browser
 }
 
 func NewBenDiBao(headless bool) *BenDiBao {
 	bendibao := new(BenDiBao)
-	la := launcher.New().Headless(headless).MustLaunch()
-	bendibao.browser = rod.New().ControlURL(la).MustConnect()
+	bendibao.Headless = headless
 	return bendibao
 }
 func (b *BenDiBao) Time() string {
+	if b.browser == nil {
+		b.openBrowser()
+	}
 	t := b.getPage().MustElement(`p.time`).MustText()
 	return t
 }
 
 func (b *BenDiBao) HighRisk() []Risk {
+	if b.browser == nil {
+		b.openBrowser()
+	}
 	page := b.getPage()
 	defer page.MustClose()
 	elements := page.MustElement(`.height`).MustElements(`.info-list`)
@@ -30,6 +36,9 @@ func (b *BenDiBao) HighRisk() []Risk {
 	return b.getRisk(elements)
 }
 func (b *BenDiBao) MiddleRisk() []Risk {
+	if b.browser == nil {
+		b.openBrowser()
+	}
 	page := b.getPage()
 	defer page.MustClose()
 	elements := page.MustElement(`.middle`).MustElements(`.info-list`)
@@ -38,9 +47,19 @@ func (b *BenDiBao) MiddleRisk() []Risk {
 	}
 	return b.getRisk(elements)
 }
+func (b *BenDiBao) openBrowser() {
+	if b.browser == nil {
+		la := launcher.New().Headless(b.Headless).MustLaunch()
+		b.browser = rod.New().ControlURL(la).MustConnect()
+	}
+}
 
-func (b BenDiBao) Close() error {
-	return b.browser.Close()
+func (b *BenDiBao) Close() (err error) {
+	if b.browser != nil {
+		err = b.browser.Close()
+	}
+	b.browser = nil
+	return
 }
 
 func (b *BenDiBao) getRisk(elements rod.Elements) []Risk {
@@ -58,7 +77,7 @@ func (b *BenDiBao) getRisk(elements rod.Elements) []Risk {
 		}
 		r := Risk{
 			Province:   province,
-			communitys: communitys,
+			Communitys: communitys,
 		}
 		risk = append(risk, r)
 	}
