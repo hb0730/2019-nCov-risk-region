@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mirror the Github repo to Gitee
-        uses: Yikun/hub-mirror-action@master
+        uses: Yikun/hub-mirror-action@mappings
         with:
           src: github/hb0730
           dst: gitee/hb0730
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           white_list: '2019-nCov-risk-region'
-          static_list: '2019-nCov-risk-region'
+          mappings: "2019-nCov-risk-region=>nCov-2019-risk-region"
           force_update: true
