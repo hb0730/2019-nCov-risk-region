@@ -3,7 +3,6 @@ package source
 import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
-	"strings"
 )
 
 type BenDiBao struct {
@@ -16,10 +15,9 @@ func NewBenDiBao(headless bool) *BenDiBao {
 	bendibao.browser = rod.New().ControlURL(la).MustConnect()
 	return bendibao
 }
-func (b *BenDiBao) Time() (string, error) {
+func (b *BenDiBao) Time() string {
 	t := b.getPage().MustElement(`p.time`).MustText()
-	t = strings.ReplaceAll(t, "截至", "")
-	return t, nil
+	return t
 }
 
 func (b *BenDiBao) HighRisk() []Risk {
@@ -71,4 +69,8 @@ func (b *BenDiBao) getPage() *rod.Page {
 	return b.browser.
 		MustPage("http://m.sh.bendibao.com/news/gelizhengce/fengxianmingdan.php").
 		MustWaitLoad()
+}
+
+func init() {
+	Instance.Put("bendibao", NewBenDiBao(false))
 }

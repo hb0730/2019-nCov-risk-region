@@ -14,6 +14,8 @@ import (
 type GovCN struct {
 	Appid, Token, Nonce, Passid, Key string
 	WifNonce, WifPaasid, WifToken    string
+	startTime                        time.Time
+	result                           Result
 }
 
 func NewGovCN() *GovCN {
@@ -29,28 +31,19 @@ func NewGovCN() *GovCN {
 	return cn
 }
 
-func (c *GovCN) Time() (string, error) {
-	result, err := c.try(4)
-	if err != nil {
-
-		return "", nil
+func (c *GovCN) Time() string {
+	r := c.getResult()
+	if r.Code != 0 {
+		return ""
 	}
-	if result.Code != 0 {
-		return "", nil
-	}
-	return result.Data.EndUpdateTime, nil
+	return r.Data.EndUpdateTime
 }
 
 func (c *GovCN) HighRisk() []Risk {
-	result, err := c.try(4)
-	if err != nil {
-
-		return nil
-	}
+	result := c.getResult()
 	if result.Code != 0 {
 		return nil
 	}
-
 	high := result.Data.Highlist
 	risks := []Risk{}
 	for _, v := range high {
@@ -68,11 +61,7 @@ func (c *GovCN) HighRisk() []Risk {
 }
 
 func (c *GovCN) MiddleRisk() []Risk {
-	result, err := c.try(4)
-	if err != nil {
-
-		return nil
-	}
+	result := c.getResult()
 	if result.Code != 0 {
 		return nil
 	}
@@ -154,7 +143,19 @@ func (c *GovCN) headers(timestamp, wifNonce, wifPaasid, wifToken string) map[str
 	}
 	return headers
 }
-func (c GovCN) try(num int) (Result, error) {
+
+func (c *GovCN) getResult() (r Result) {
+	if c.startTime.IsZero() {
+		r, _ = c.try(4)
+		return
+	}
+	if time.Now().Sub(c.startTime).Minutes() > 30 {
+		r, _ = c.try(4)
+		return
+	}
+	return c.result
+}
+func (c *GovCN) try(num int) (Result, error) {
 	return func(num int) (Result, error) {
 		result, err := c.request()
 		if err != nil || (num > 0 && result.Code != 0) {
@@ -162,8 +163,14 @@ func (c GovCN) try(num int) (Result, error) {
 			time.Sleep(2 * time.Second)
 			result, err = c.try(num)
 		}
+		c.result = result
+		c.startTime = time.Now()
 		return result, err
 	}(num)
+}
+
+func init() {
+	Instance.Put("govn", NewGovCN())
 }
 
 type AjaxParams struct {
