@@ -10,17 +10,17 @@
 ```
 http://localhost
 http://localhost?type=bendibao
-http://localhost?type=govn
+http://localhost?type=gov
 ```
 2. 高风险
 ```
 http://localhost/hight
 http://localhost/hight?type=bendibao
-http://localhost/hight?type=govn
+http://localhost/hight?type=gov
 ```
 3. 低风险
 ```
 http://localhost/middle
 http://localhost/middle?type=bendibao
-http://localhost/middle?type=govn
+http://localhost/middle?type=gov
 ```

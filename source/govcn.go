@@ -170,7 +170,7 @@ func (c *GovCN) try(num int) (Result, error) {
 }
 
 func init() {
-	Instance.Put("govn", NewGovCN())
+	Instance.Put("gov", NewGovCN())
 }
 
 type AjaxParams struct {

@@ -47,7 +47,7 @@ func handle() {
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
-			name = "govn"
+			name = "gov"
 		}
 		write(w, resultSuccess(source.MiddleRisk(name)))
 	}))
