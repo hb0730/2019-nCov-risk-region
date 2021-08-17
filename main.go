@@ -23,6 +23,7 @@ func handle() {
 	http.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.Method != http.MethodGet {
 			write(w, resultFailed("invalid http method"))
+			return
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
@@ -34,6 +35,7 @@ func handle() {
 	http.Handle("/high", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.Method != http.MethodGet {
 			write(w, resultFailed("invalid http method"))
+			return
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
@@ -44,6 +46,7 @@ func handle() {
 	http.HandleFunc("/middle", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.Method != http.MethodGet {
 			write(w, resultFailed("invalid http method"))
+			return
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
