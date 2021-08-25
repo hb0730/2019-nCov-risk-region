@@ -27,7 +27,7 @@ func handle() {
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
-			name = "govn"
+			name = "gov"
 		}
 		result := source.All(name)
 		write(w, resultSuccess(result))
@@ -39,7 +39,7 @@ func handle() {
 		}
 		name := request.URL.Query().Get("type")
 		if name == "" {
-			name = "govn"
+			name = "gov"
 		}
 		write(w, resultSuccess(source.HighRisk(name)))
 	}))
