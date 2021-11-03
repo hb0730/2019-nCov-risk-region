@@ -8,7 +8,8 @@ builds:
   - main: .
     binary: 2019-nConv-risk
     goos:
-      - freebsd
+      - linux
+      - darwin
       - windows
     goarm:
       - amd64
@@ -18,7 +19,11 @@ archives:
   - id: tar
     format: tar.gz
     replacements:
-      darwin: macOS
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
     format_overrides:
       - goos: windows
         format: zip
