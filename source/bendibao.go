@@ -65,7 +65,12 @@ func (b *BenDiBao) Close() (err error) {
 func (b *BenDiBao) getRisk(elements rod.Elements) []Risk {
 	risk := []Risk{}
 	for _, v := range elements {
-		province := v.MustElement(`div.province>span`).MustText()
+		city := v.MustElements(`div.shi>span`)
+		if city.Empty() {
+			continue
+		}
+		province := city.First()
+		shi := city.Last()
 		infoElements := v.MustElements(`ul.info-detail>li`)
 		if infoElements.Empty() {
 			continue
@@ -76,7 +81,8 @@ func (b *BenDiBao) getRisk(elements rod.Elements) []Risk {
 			communitys = append(communitys, info)
 		}
 		r := Risk{
-			Province:   province,
+			Province:   province.MustText(),
+			City:       shi.MustText(),
 			Communitys: communitys,
 		}
 		risk = append(risk, r)

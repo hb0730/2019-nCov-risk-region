@@ -43,7 +43,7 @@ func handle() {
 		}
 		write(w, resultSuccess(source.HighRisk(name)))
 	}))
-	http.HandleFunc("/middle", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+	http.HandleFunc("/middle", func(w http.ResponseWriter, request *http.Request) {
 		if request.Method != http.MethodGet {
 			write(w, resultFailed("invalid http method"))
 			return
@@ -53,7 +53,7 @@ func handle() {
 			name = "gov"
 		}
 		write(w, resultSuccess(source.MiddleRisk(name)))
-	}))
+	})
 }
 func write(w http.ResponseWriter, rt []byte) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
